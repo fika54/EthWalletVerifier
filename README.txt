@@ -25,7 +25,11 @@ make sure to import the file to the root directory for the model to train proper
 
 Once the file is there, run the AiTraining.py script in backend/AI and it will train a model and store it in a .pkl file.
 
-then run streamlit run frontend/app.py to start the application
+then run:
+
+    streamlit run frontend/app.py 
+ 
+to start the application
 
 Huge thanks to M-Ali2404 and rrainxx for making the frontend. 
 

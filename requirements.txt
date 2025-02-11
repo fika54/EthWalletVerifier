@@ -4,6 +4,4 @@ pandas
 moralis
 requests
 flask
-nltk
-spacy
 web3

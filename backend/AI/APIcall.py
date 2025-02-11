@@ -1,5 +1,3 @@
-import requests
-import time
 import pandas as pd
 from moralis import evm_api
 
