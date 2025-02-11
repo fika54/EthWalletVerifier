@@ -180,69 +180,7 @@ def post_request(endpoint: str, payload: dict, spinner_text: str = "Processing..
 # -------------------------------------------------------------------------
 # Main App Tabs: AI Chat, Scam Detector, Wallet Verification
 # -------------------------------------------------------------------------
-tab_chat, tab_scam, tab_wallet = st.tabs([
-    "🤖 AI Chat", "☑️ Scam Detector", "🔗 Wallet Verification"
-])
-
-# -------------------------------------------------------------------------
-# AI Chat Tab
-# -------------------------------------------------------------------------
-with tab_chat:
-    st.header("AI Chat")
-    st.write("Ask any crypto-related question and receive an AI-generated answer.")
-
-    if "messages" not in st.session_state:
-        st.session_state["messages"] = []
-
-    for message in st.session_state["messages"]:
-        with st.chat_message(message["role"]):
-            st.write(message["content"])
-
-    user_query = st.chat_input("Ask a question...")
-    if user_query:
-        st.session_state["messages"].append({"role": "user", "content": user_query})
-        with st.chat_message("user"):
-            st.write(user_query)
-
-        # Display the assistant's response with a simulated decryption animation.
-        with st.chat_message("assistant"):
-            placeholder = st.empty()
-            placeholder.markdown(" **Decrypting answer...**")
-            time.sleep(1)
-            payload = {"query": user_query}
-            data = post_request(f"{BACKEND_URL}/api/chat", payload, "Generating response...")
-            if data and "answer" in data:
-                final_answer = data["answer"]
-            else:
-                final_answer = "I'm sorry, I couldn't retrieve an answer at this time."
-            # Use our simulated decryption function.
-            simulate_decryption(placeholder, final_answer)
-            # Save the assistant's final response to the conversation history.
-            st.session_state["messages"].append({"role": "assistant", "content": final_answer})
-    # Extra spacing at the bottom so content isn’t hidden behind the fixed chat input.
-    st.markdown("<div style='height: 120px;'></div>", unsafe_allow_html=True)
-
-# -------------------------------------------------------------------------
-# Scam Detector Tab
-# -------------------------------------------------------------------------
-with tab_scam:
-    st.header("Scam Detector")
-    st.write("Paste a suspicious message and let our model check for scam indicators.")
-
-    suspicious_message = st.text_area("Enter the suspicious message:")
-    if st.button("Analyze", key="analyze_scam"):
-        if suspicious_message.strip():
-            payload = {"message": suspicious_message}
-            data = post_request(f"{BACKEND_URL}/detect-scam", payload, "Analyzing message...")
-            if data:
-                is_scam = data.get("is_scam", False)
-                confidence = data.get("confidence", 0.0)
-                if is_scam:
-                    st.error(f"This message appears to be a scam! Confidence: {confidence:.2f}")
-                else:
-                    st.success(f"This message seems safe. Confidence: {confidence:.2f}")
-        else:
-            st.warning("Please enter a message to analyze.")
+tab_wallet = st.tabs(["🔗 Wallet Verification"])[0]
 
 # -------------------------------------------------------------------------
 # Wallet Verification Tab
