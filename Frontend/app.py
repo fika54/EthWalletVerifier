@@ -34,27 +34,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# -------------------------------------------------------------------------
-# Define a function to simulate a fake decryption effect
-# -------------------------------------------------------------------------
-def simulate_decryption(placeholder, final_text, delay=0.05, iterations=15):
-    """
-    Simulate a decryption effect by gradually replacing random characters
-    with the final text.
-    """
-    final_chars = list(final_text)
-    current = [random.choice(string.ascii_letters + string.digits) if c != " " else " " for c in final_chars]
-    for i in range(iterations):
-        for j in range(len(final_chars)):
-            if random.random() < float(i + 1) / iterations:
-                current[j] = final_chars[j]
-            else:
-                if final_chars[j] != " ":
-                    current[j] = random.choice(string.ascii_letters + string.digits)
-        placeholder.markdown(" **" + "".join(current) + "**")
-        time.sleep(delay)
-        time.sleep(delay)
-    placeholder.markdown(" **" + final_text + "**")
+
 
 # -------------------------------------------------------------------------
 # Minimal Custom CSS Styling (Neutral Theme, Except Arrow)

@@ -27,6 +27,6 @@ Once the file is there, run the AiTraining.py script in backend/AI and it will t
 
 then the application should run properly
 
-Huge thanks to M-Ali2404 and rrainxx for making the frontend.
+Huge thanks to M-Ali2404 and rrainxx for making the frontend. 
 
 Checkout the actual project we made here: https://github.com/M-Ali2404/CryptoGuardianTest/tree/main
