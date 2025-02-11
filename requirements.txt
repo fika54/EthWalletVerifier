@@ -1,0 +1,9 @@
+streamlit
+scikit-learn
+pandas
+moralis
+requests
+flask
+nltk
+spacy
+web3
