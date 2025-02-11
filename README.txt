@@ -23,6 +23,10 @@ Forensics. In Proceedings of the 29th ACM SIGKDD Conference on Knowledge Discove
 
 make sure to import the file to the root directory for the model to train properly.
 
-Once the file is there, run the AiTraining.py script in AI and it will train a model and store it in a .pkl file.
+Once the file is there, run the AiTraining.py script in backend/AI and it will train a model and store it in a .pkl file.
 
 then the application should run properly
+
+Huge thanks to M-Ali2404 and rrainxx for making the frontend.
+
+Checkout the actual project we made here: https://github.com/M-Ali2404/CryptoGuardianTest/tree/main
