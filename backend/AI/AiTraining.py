@@ -6,115 +6,96 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from pathlib import Path
 
-
+# Function to train an initial Random Forest model
 def initialTrain():
-
+    # Load dataset from CSV file
     fullList = pd.read_csv('wallets_features_classes_combined.csv')
+    
+    # Remove duplicate wallet addresses, keeping the first occurrence
     fullList = fullList.drop_duplicates(subset='address', keep='first')
+    
+    # Separate illicit (class 1) and licit (class 2) wallet addresses
     illicit = fullList[fullList['class'] == 1]
     licit = fullList[fullList['class'] == 2]
-    unknown = fullList[fullList['class'] == 3]
-
-    #testIllicit = illicit.iloc[:20]
-    #illicit = illicit.iloc[20:]
-    #testLicit = licit.iloc[:20]
-    #licit = licit.iloc[20:]
-
-    #testSet = [testIllicit, testLicit]
-    #testSet = pd.concat(testSet)
-
-    #testSet = testSet.drop(['class'], axis=1)
-    #testSet = testSet.drop(['address'], axis=1)
-
+    
+    # Combine illicit and licit data into a single dataset
     c = [illicit, licit]
-
     Set = pd.concat(c)
-
+    
+    # Define features (X) and target variable (y)
     y = Set['class']
-    X = Set.drop(['class'], axis=1)
-    X = X.drop(['address'], axis=1)
+    X = Set.drop(['class'], axis=1)  # Drop target column
+    X = X.drop(['address'], axis=1)  # Drop address column since it's not a feature
+    
+    # Split dataset into training (80%) and testing (20%) sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=101)
-
-
+    
+    # Initialize Random Forest Classifier with 600 decision trees
     rfc = RandomForestClassifier(n_estimators=600)
+    
+    # Train the model
     rfc.fit(X_train, y_train)
-
-
+    
+    # Save the trained model to a file using joblib
     joblib.dump(rfc, "finalModel.pkl")
-
-
+    
+    # Make predictions on the test set
     rfc_pred = rfc.predict(X_test)
-
+    
+    # Print performance metrics
     print(classification_report(y_test, rfc_pred))
-
     print(confusion_matrix(y_test, rfc_pred))
 
-#       class  precision    recall  f1-score   support
-
-#           1       0.96      0.79      0.87      2760
-#           2       0.99      1.00      0.99     50311
-
-#    accuracy                           0.99     53071
-#   macro avg       0.98      0.90      0.93     53071
-#weighted avg       0.99      0.99      0.99     53071
-
+# Function to train an alternative model with different data balancing strategy
 def alteredTrain():
-
+    # Load dataset from CSV file
     fullList = pd.read_csv('wallets_features_classes_combined.csv')
+    
+    # Remove duplicate wallet addresses, keeping the first occurrence
     fullList = fullList.drop_duplicates(subset='address', keep='first')
+    
+    # Separate illicit (class 1), licit (class 2), and unknown (class 3) wallet addresses
     illicit = fullList[fullList['class'] == 1]
     licit = fullList[fullList['class'] == 2]
-    unknown = fullList[fullList['class'] == 3]
-
-    licit = licit.sample(n=illicit.shape[0]+5000)
-
+    unknown = fullList[fullList['class'] == 3]  # Unused in training
+    
+    # Balance the dataset by sampling licit data to match illicit count + 5000
+    licit = licit.sample(n=illicit.shape[0] + 5000)
+    
+    # Print dataset sizes for verification
     print("illicit", illicit.shape[0])
     print("licit", licit.shape[0])
-
+    
+    # Combine illicit and sampled licit data
     c = [illicit, licit]
-
     Set = pd.concat(c)
-
+    
+    # Define features (X) and target variable (y)
     y = Set['class']
     X = Set.drop(['class'], axis=1)
     X = X.drop(['address'], axis=1)
+    
+    # Select a specific subset of features for training
     X = X[['num_txs_as_sender', 'num_txs_as receiver', 'first_block_appeared_in', 'last_block_appeared_in', 'lifetime_in_blocks', 'total_txs', 'first_sent_block', 'first_received_block']]
     
+    # Split dataset into training (80%) and testing (20%) sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=101)
-
-
+    
+    # Initialize Random Forest Classifier with 600 decision trees
     rfc = RandomForestClassifier(n_estimators=600)
-    rfc.fit(X_train, y_train)#
-
-
+    
+    # Train the model
+    rfc.fit(X_train, y_train)
+    
+    # Save the trained model to a file using joblib
     joblib.dump(rfc, 'finalModel.pkl')
-
-
+    
+    # Make predictions on the test set
     rfc_pred = rfc.predict(X_test)
-
+    
+    # Print performance metrics
     print(classification_report(y_test, rfc_pred))
-
     print(confusion_matrix(y_test, rfc_pred))
 
-
-#       class  precision    recall  f1-score   support
-
-#           1       0.87      0.85      0.86      2799
-#           2       0.89      0.91      0.90      3908
-
-#    accuracy                           0.88      6707
-#   macro avg       0.88      0.88      0.88      6707
-#weighted avg       0.88      0.88      0.88      6707
-
-#       class  precision    recall  f1-score   support
-
-#           1       0.77      0.56      0.65      2760
-#           2       0.98      0.99      0.98     50311
-
-#    accuracy                           0.97     53071
-#   macro avg       0.87      0.78      0.82     53071
-#weighted avg       0.97      0.97      0.97     53071
-
-
+# Run the initial training function
 initialTrain()
-
